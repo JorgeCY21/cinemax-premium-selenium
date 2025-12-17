@@ -1,6 +1,5 @@
 import sys
 import os
-import time
 
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, ROOT_DIR)
@@ -16,21 +15,28 @@ def test_rf04_cp02_seleccion_asientos_no_disponibles():
     wait = WebDriverWait(driver, 20)
 
     try:
-        print("\n🚫 RF-04-CP02 – Selección de asientos no disponibles")
+        print("\n🚫 RF-04-CP02 – Asientos no disponibles (A-1, A-2)")
 
         login(driver, wait)
         ir_a_horarios_interstellar(driver, wait)
         seleccionar_sala_imax(driver, wait)
 
-        print("🪑 Intentando seleccionar asiento no disponible")
+        print("🔍 Verificando que los asientos A-1 y A-2 NO estén disponibles")
 
-        asiento_no_disponible = wait.until(
-            EC.element_to_be_clickable((By.XPATH, "//span[text()='F-1']/parent::div"))
+        asientos_a1 = driver.find_elements(
+            By.XPATH,
+            "//span[normalize-space()='A-1']/parent::div"
         )
-        asiento_no_disponible.click()
-        time.sleep(0.5)
 
-        print("⚠️ El sistema bloquea correctamente el asiento")
+        asientos_a2 = driver.find_elements(
+            By.XPATH,
+            "//span[normalize-space()='A-2']/parent::div"
+        )
+
+        assert len(asientos_a1) == 0
+        assert len(asientos_a2) == 0
+
+        print("✅ Asientos A-1 y A-2 no existen (ocupados correctamente)")
         print("✅ RESULTADO: Exitoso")
 
     finally:
