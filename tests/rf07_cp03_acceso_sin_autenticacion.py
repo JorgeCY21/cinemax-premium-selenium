@@ -9,20 +9,24 @@ from selenium.webdriver.support import expected_conditions as EC
 from utils.driver import get_driver
 
 
-def test_rf05_cp02_compra_sin_autenticacion():
+def test_rf07_cp03_acceso_sin_autenticacion():
     driver = get_driver()
     wait = WebDriverWait(driver, 20)
 
     try:
-        print("\n🔒 RF-05-CP02 – Compra sin estar autenticado")
+        print("\n🔒 RF-07-CP03 – Acceso sin autenticación")
 
-        # Intento de acceso directo sin login
-        driver.get("https://front-cine-gilt.vercel.app/movies")
+        driver.get("https://front-cine-gilt.vercel.app/my-tickets")
 
-        # Verificar página 404
-        wait.until(EC.title_contains("404"))
+        # Redirección o bloqueo
+        wait.until(
+            EC.any_of(
+                EC.url_contains("/login"),
+                EC.title_contains("404")
+            )
+        )
 
-        print("✅ Acceso bloqueado con 404 NOT_FOUND")
+        print("✅ Acceso restringido correctamente")
         print("✅ RESULTADO: Exitoso")
 
     finally:
