@@ -18,27 +18,36 @@ def test_rf02_cp02_login_password_incorrecta():
 
     try:
         print("\n❌ RF-02-CP02 – Inicio de sesión con contraseña incorrecta")
+        print("📌 Objetivo: Validar rechazo de credenciales\n")
 
         driver.get(BASE_URL)
+        print("➡️ Página de login cargada")
         time.sleep(1)
 
-        wait.until(EC.element_to_be_clickable(
-            (By.XPATH, "//span[normalize-space()='Iniciar sesión']")
-        )).click()
+        wait.until(EC.visibility_of_element_located((By.ID, "email"))).send_keys(
+            "seleniumtest@gmail.com"
+        )
+        print("✍️ Correo electrónico ingresado")
         time.sleep(1)
 
-        driver.find_element(By.ID, "email").send_keys("seleniumtest@gmail.com")
+        wait.until(EC.visibility_of_element_located((By.ID, "password"))).send_keys(
+            "Incorrecta.1"
+        )
+        print("✍️ Contraseña incorrecta ingresada")
         time.sleep(1)
 
-        driver.find_element(By.ID, "password").send_keys("Incorrecta.1")
-        time.sleep(1)
-
-        driver.find_element(By.XPATH, "//button[contains(text(),'Iniciar')]").click()
+        wait.until(
+            EC.element_to_be_clickable(
+                (By.XPATH, "//button[normalize-space()='Iniciar Sesión']")
+            )
+        ).click()
+        print("🚀 Enviando credenciales incorrectas")
         time.sleep(2)
 
-        # Validación: no accede al sistema
         assert "movies" not in driver.current_url
-        print("✅ Mensaje de credenciales inválidas mostrado correctamente")
+        print("⚠️ Acceso denegado – Credenciales inválidas")
+        print("✅ RESULTADO: Exitoso")
 
     finally:
         driver.quit()
+        print("🧹 Navegador cerrado correctamente\n")
